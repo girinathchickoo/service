@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
-
+import logo from "./logo.svg";
+import "./App.css";
+import apiservice from "./components/service";
+import { useEffect, useState } from "react";
 function App() {
+  const [data, setData] = useState();
+  //example for GET
+  useEffect(() => {
+    apiservice.getApiData("/users").then((res) => {
+      setData(res);
+    });
+  }, []);
+  //example for POST
+  useEffect(() => {
+    //example payload that u need to send to api
+    let payload = {
+      id: 1,
+      name: "yor name",
+      comments: "loreipsum",
+    };
+    apiservice.postApiData("/posts", payload).then((res) => {
+      console.log(res);
+    });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {data
+        ? data.map((item, index) => {
+            return <p key={index}>{item.name}</p>;
+          })
+        : "something went wrong"}
     </div>
   );
 }
